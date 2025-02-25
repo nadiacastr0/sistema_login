@@ -77,7 +77,7 @@ class LoginApp(ctk.CTk):
         self.botao_entrar.place(x=25, y=285)
 
         # Botão para cadastrar um novo usuário
-        self.botao_cadastrar = ctk.CTkButton(frame, text="Cadastrar", font=FONTE_PADRAO, width=300, command=None)
+        self.botao_cadastrar = ctk.CTkButton(frame, text="Cadastrar", font=FONTE_PADRAO, width=300, command=self.cadastro)
         self.botao_cadastrar.place(x=25, y=325)
 
         # Atualizar as cores ao iniciar
@@ -99,6 +99,24 @@ class LoginApp(ctk.CTk):
             messagebox.showwarning("Atenção", "Preencha todos os campos!")
             return
 
+    def cadastro(self):
+        """Abre a janela de cadastro e a coloca na frente"""
+        self.janela_cadastro = ctk.CTkToplevel(self)
+        self.janela_cadastro.geometry("400x300")
+        self.janela_cadastro.title("Cadastro de Usuário")
+        self.janela_cadastro.resizable(False, False)
+        self.janela_cadastro.attributes('-topmost', True)  # Coloca a janela na frente
+
+        ctk.CTkLabel(self.janela_cadastro, text="Cadastre-se", font=FONTE_TITULO).pack(pady=10)
+
+        self.novo_usuario = ctk.CTkEntry(self.janela_cadastro, placeholder_text="Nome de usuário", width=250, font=FONTE_PADRAO)
+        self.novo_usuario.pack(pady=5)
+
+        self.nova_senha = ctk.CTkEntry(self.janela_cadastro, placeholder_text="Senha", width=250, font=FONTE_PADRAO, show="*")
+        self.nova_senha.pack(pady=5)
+
+        self.botao_salvar = ctk.CTkButton(self.janela_cadastro, text="Salvar", font=FONTE_PADRAO, width=250, command=None)
+        self.botao_salvar.pack(pady=10)
 
 # Iniciar o aplicativo
 if __name__ == "__main__":
