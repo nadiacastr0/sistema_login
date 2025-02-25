@@ -67,9 +67,10 @@ class LoginApp(ctk.CTk):
         self.label_senha_obrig = ctk.CTkLabel(frame, text="O campo senha é obrigatório.", font=FONTE_MENSAGEM)
         self.label_senha_obrig.place(x=25, y=205)
 
-        # CheckBox
-        self.lembrar = ctk.CTkCheckBox(frame, text="Mostrar senha", font=FONTE_PADRAO)
-        self.lembrar.place(x=25, y=235)
+        # Botão para Exibir/Ocultar Senha
+        self.ver_senha_var = ctk.IntVar(value=0)
+        self.ver_senha = ctk.CTkCheckBox(frame, text="Mostrar senha", font=FONTE_PADRAO, variable=self.ver_senha_var, command=self.toggle_senha)
+        self.ver_senha.place(x=25, y=235)
 
         # Botão de Entrar
         self.botao_entrar = ctk.CTkButton(frame, text="Entrar", font=FONTE_PADRAO, width=300, command=self.login)
@@ -81,6 +82,13 @@ class LoginApp(ctk.CTk):
 
         # Atualizar as cores ao iniciar
         self.atualizar_cores()
+
+    def toggle_senha(self):
+        """Alterna entre mostrar/ocultar senha com base no estado do checkbox"""
+        if self.ver_senha.get():
+            self.senha.configure(show="")
+        else:
+            self.senha.configure(show="*")
 
     def login(self):
         """Lógica de autenticação do usuário"""
