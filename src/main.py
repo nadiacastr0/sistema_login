@@ -1,9 +1,10 @@
-import sqlite3
 import customtkinter as ctk
 from PIL import Image
+import sqlite3
 from tkinter import messagebox
+import bcrypt
 
-# Configuração inicial do tema
+# Configuração do Tema
 ctk.set_appearance_mode("system")
 ctk.set_default_color_theme("themes/coffee.json")
 
@@ -11,6 +12,14 @@ ctk.set_default_color_theme("themes/coffee.json")
 FONTE_TITULO = ("Segoe Script", 24, "bold")
 FONTE_PADRAO = ("Comic Sans MS", 16)
 FONTE_MENSAGEM = ("Dubai Light", 12, "italic")
+
+# Função para criptografar senha
+def hash_senha(senha):
+    return bcrypt.hashpw(senha.encode(), bcrypt.gensalt()).decode()
+
+# Função para verificar senha
+def verificar_senha(senha_digitada, senha_armazenada):
+    return bcrypt.checkpw(senha_digitada.encode(), senha_armazenada.encode())
 
 # Criar banco de dados e tabela
 def criar_tabela():
@@ -32,7 +41,10 @@ def verificar_usuario(usuario, senha):
         cursor = conexao.cursor()
         cursor.execute("SELECT senha FROM usuarios WHERE usuario = ?", (usuario,))
         resultado = cursor.fetchone()
-    return
+    
+    if resultado and verificar_senha(senha, resultado[0]):
+        return True
+    return False
 
 class LoginApp(ctk.CTk):
     def __init__(self):
@@ -155,10 +167,12 @@ class LoginApp(ctk.CTk):
             messagebox.showwarning("Atenção", "Preencha todos os campos!")
             return
 
+        senha_hash = hash_senha(senha)  # Criptografa a senha
+
         try:
             conexao = sqlite3.connect("usuarios.db")
             cursor = conexao.cursor()
-            cursor.execute("INSERT INTO usuarios (usuario, senha) VALUES (?, ?)", (usuario, senha))
+            cursor.execute("INSERT INTO usuarios (usuario, senha) VALUES (?, ?)", (usuario, senha_hash))
             conexao.commit()
             messagebox.showinfo("Sucesso", "Usuário cadastrado com sucesso!")
 
@@ -187,7 +201,6 @@ class LoginApp(ctk.CTk):
 
 criar_tabela()
 
-# Iniciar o aplicativo
 if __name__ == "__main__":
     app = LoginApp()
     app.mainloop()
