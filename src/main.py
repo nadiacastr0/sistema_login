@@ -25,6 +25,15 @@ class LoginApp(ctk.CTk):
         # Criar os widgets da interface
         self.create_widgets()
 
+    def atualizar_cores(self):
+        """Atualiza as cores do texto com base no tema atual"""
+        modo = ctk.get_appearance_mode()  # Verifica o modo atual
+        cor_texto = "#ab7000" if modo == "Light" else "#e1b700"
+
+        # Atualiza a cor das mensagens
+        self.label_usuario_obrig.configure(text_color=cor_texto)
+        self.label_senha_obrig.configure(text_color=cor_texto)
+
     def create_widgets(self):
         """Cria e posiciona os widgets na tela"""
 
@@ -70,6 +79,8 @@ class LoginApp(ctk.CTk):
         self.botao_cadastrar = ctk.CTkButton(frame, text="Cadastrar", font=FONTE_PADRAO, width=300, command=None)
         self.botao_cadastrar.place(x=25, y=325)
 
+        # Atualizar as cores ao iniciar
+        self.atualizar_cores()
 
     def login(self):
         """Lógica de autenticação do usuário"""
